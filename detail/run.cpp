@@ -23,13 +23,13 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
     active_player_count = players.size();
     int starting_player = 0;
 
-    /* This variable will hold a vector of -1 values.
-     * As players get out of the game, we will update this vector
-     * to be -2 for that player.
+    /* This vector will be the initial empty guess vector
+     * for each round.
      *
-     * Thus, this vector is adequate to be the initial "guesses" vector
-     * for any round. */
-    std::vector< int > guess_template( players.size(), -1 );
+     * It will start populated as Player::PENDING.
+     * We will change it to Player::NOT_PLAYING as the game progresses.
+     */
+    std::vector< int > guess_template( players.size(), Player::PENDING );
 
     // Number of chopsticks each player has in hand.
     std::vector< int > hands(players.size());
@@ -43,7 +43,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         int hand_sum = 0;
         for( int i = starting_player; i < players.size(); ++i ) {
             int p = i % players.size();
-            if( guesses[p] == -2 ) continue;
+            if( guesses[p] == Player::NOT_PLAYING ) continue;
             hands[p] = players[p]->hand();
             if( hands[p] < 0 || hands[p] > chopsticks[p] ) {
                 std::clog << "Player " << players[p]->name()
@@ -60,19 +60,25 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         int winner = -1;
         for( int i = starting_player; i < players.size(); ++i ) {
             int p = i % players.size();
-            if( guesses[p] == -2 ) continue;
+            if( guesses[p] == Player::NOT_PLAYING ) continue;
             guesses[p] = players[p]->guess( guesses );
             if( guesses[p] < 0 ) {
                 std::clog << "Player " << players[p]->name()
                     << ", at position " << p << ", stupidly guessed "
-                    << guesses[i] << " - it is deemed to be wrong. ";
+                    << guesses[i] << ".\n"
+                    << "I will reset it to a negative value"
+                    << "to indicate an invalid guess.\n";
+                guesses[p] = Player::INVALID;
                 continue;
             }
             if( guesses[p] > chopstick_count ) {
                 std::clog << "Player " << players[p]->name()
                     << ", at position " << i << ", stupidly guessed "
                     << guesses[p] << ", despite having only "
-                    << chopstick_count << " chopsticks left on the table.\n";
+                    << chopstick_count << " chopsticks left on the table.\n"
+                    << "I will reset it to a negative value"
+                    << "to indicate an invalid guess.\n";
+                guesses[p] = Player::INVALID;
                 continue;
             }
             for( int j = 0; j < players.size(); ++j )
@@ -81,10 +87,13 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
                         << ", at position " << p << ", guessed the value "
                         << guesses[p] << " - thats the same value that player "
                         << players[j]->name() << " guessed.\n"
-                        << "Resetting its guess to -1 as a penalty "
-                        << "(this way, this player surely will miss).\n";
-                    guesses[p] = -1;
+                        << "I will reset it to a negative value"
+                        << "to indicate an invalid guess.\n";
+                    guesses[p] = Player::INVALID;
                     break;
+                    /* Note we are only breaking from the inner `for`;
+                     * that's okay since the test below this value
+                     * will alway fail, and we get to restart the cycle. */
                 }
 
             /* Its easier to do the winner test now
@@ -97,7 +106,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         // Settling the round
         for( int i = starting_player; i < players.size(); ++i ) {
             int p = i % players.size();
-            if( guesses[p] == -2 ) continue;
+            if( guesses[p] == Player::NOT_PLAYING ) continue;
             players[p]->settle_round( hands, guesses );
             std::cout << "Player " << p << " (" << players[p]->name() << ")"
                 << " - hand: " << hands[p] << " - guess: " << guesses[p] << '\n';
@@ -110,7 +119,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
 
             do {
                 starting_player = (starting_player + 1) % players.size();
-            } while( guess_template[starting_player] == -2 );
+            } while( guess_template[starting_player] == Player::NOT_PLAYING );
 
             continue;
         }
@@ -127,9 +136,9 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         std::cout << "Player " << winner << " (" << players[winner]->name() << ")"
             << " left the game.\n";
 
-        guess_template[winner] = -2;
+        guess_template[winner] = Player::NOT_PLAYING;
         active_player_count--;
-        while( guess_template[starting_player] == -2 )
+        while( guess_template[starting_player] == Player::NOT_PLAYING )
             starting_player = (starting_player + 1) % players.size();
 
     } // while( active_player_count >= 2 )
