@@ -41,8 +41,8 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
 
         // Pick each player hand
         int hand_sum = 0;
-        for( int i = starting_player; i < players.size(); ++i ) {
-            int p = i % players.size();
+        for( int i = 0; i < players.size(); ++i ) {
+            int p = (i + starting_player) % players.size();
             if( guesses[p] == Player::NOT_PLAYING ) continue;
             hands[p] = players[p]->hand();
             if( hands[p] < 0 || hands[p] > chopsticks[p] ) {
@@ -58,8 +58,8 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
 
         // Pick each player guess
         int winner = -1;
-        for( int i = starting_player; i < players.size(); ++i ) {
-            int p = i % players.size();
+        for( int i = 0; i < players.size(); ++i ) {
+            int p = (i + starting_player) % players.size();
             if( guesses[p] == Player::NOT_PLAYING ) continue;
             guesses[p] = players[p]->guess( guesses );
             if( guesses[p] < 0 ) {
@@ -104,8 +104,8 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         }
 
         // Settling the round
-        for( int i = starting_player; i < players.size(); ++i ) {
-            int p = i % players.size();
+        for( int i = 0; i < players.size(); ++i ) {
+            int p = (i + starting_player) % players.size();
             if( guesses[p] == Player::NOT_PLAYING ) continue;
             players[p]->settle_round( hands, guesses );
             std::cout << "Player " << p << " (" << players[p]->name() << ")"
