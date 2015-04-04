@@ -66,7 +66,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         for( int i = 0; i < players.size(); ++i ) {
             int p = (i + starting_player) % players.size();
             if( guesses[p] == NOT_PLAYING ) continue;
-            guesses[p] = players[p]->guess( guesses );
+            guesses[p] = players[p]->guess();
             if( guesses[p] < 0 ) {
                 std::clog << "Player " << players[p]->name()
                     << ", at position " << p << ", stupidly guessed "
@@ -122,7 +122,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         for( int i = 0; i < players.size(); ++i ) {
             int p = (i + starting_player) % players.size();
             if( guesses[p] == NOT_PLAYING ) continue;
-            players[p]->settle_round( hands, guesses );
+            players[p]->settle_round();
             std::cout << "Player " << p << " (" << players[p]->name() << ")"
                 << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
         }
