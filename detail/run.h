@@ -21,6 +21,9 @@ namespace core { namespace detail {
     /* Number of chopsticks each player have avaliable. */
     extern std::vector<int> chopsticks;
 
+    /* Number of chopsticks each player held in hand last round. */
+    extern std::vector<int> last_hand;
+
     /* Guesses each player has made this round.
      * This is the vector `other_guesses` passed to the players
      * when invoking Player::guess.

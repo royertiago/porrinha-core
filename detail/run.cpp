@@ -7,6 +7,7 @@ namespace core { namespace detail {
 
 std::map< Player *, int > position;
 std::vector<int> chopsticks;
+std::vector<int> last_hand;
 std::vector<int> guesses;
 int chopstick_count;
 int active_player_count;
@@ -33,7 +34,8 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
     std::vector< int > guess_template( players.size(), PENDING_GUESS );
 
     // Number of chopsticks each player has in hand.
-    std::vector< int > hands(players.size());
+    std::vector< int > hands(players.size(), -1);
+    last_hand = hands;
 
     while( active_player_count >= 2 ) {
         guesses = guess_template;
@@ -104,13 +106,23 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
                 winner = p;
         }
 
-        // Settling the round
+        /* Settling the round
+         * We need first to keep the integrity of last_hand.
+         * Since we will not use the vector hands in this iteration,
+         * we may simply swap both values.
+         *
+         * Note we must not std::move hands to last_hand
+         * because in the next loop we will assume hands has size players.size(),
+         * so we would need to realocate space.
+         */
+        last_hand.swap( hands );
+
         for( int i = 0; i < players.size(); ++i ) {
             int p = (i + starting_player) % players.size();
             if( guesses[p] == NOT_PLAYING ) continue;
             players[p]->settle_round( hands, guesses );
             std::cout << "Player " << p << " (" << players[p]->name() << ")"
-                << " - hand: " << hands[p] << " - guess: " << guesses[p] << '\n';
+                << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
         }
 
         // Contabilizing the winner

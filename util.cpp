@@ -38,4 +38,8 @@ namespace core {
         return true;
     }
 
+    int hand( int player_index ) {
+        return detail::last_hand[player_index];
+    }
+
 } // namespace core

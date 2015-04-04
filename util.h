@@ -96,5 +96,14 @@ namespace core {
      */
     bool valid_guess( int possible_guess );
 
+// Last round information
+
+    /* Returns the number of chopsticks the player had in hand
+     * in the last round.
+     *
+     * Is -1 if the player had not played last round,
+     * or if it is the first round of the game. */
+    int hand( int player_index );
+
 } // namespace core
 #endif // CORE_UTIL_H
