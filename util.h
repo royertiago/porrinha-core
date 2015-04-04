@@ -28,8 +28,6 @@ namespace core {
     /* Returns the sum of chopsticks avaliable to all players. */
     int chopstick_count();
 
-// Individual player queries
-
     /* Returns the index of the target player.
      *
      * This function is intended to be used like
@@ -42,6 +40,8 @@ namespace core {
      */
     int index( Player * me );
 
+// Individual round queries
+
     /* Returns the number of chopsticks that the respective player have.
      *
      * Note that this is _not_ the number of chopsticks
@@ -52,15 +52,37 @@ namespace core {
     int chopsticks( int player_index );
 
     /* Returns the current guess of the selected player.
-     * The player might have still not guessed,
-     * or not playing anymore,
-     * or made an invalid movement;
-     * the returned values in this case follows the convention for
-     * the `other_guesses` vector, in Player::guess method.
+     *
+     * If guess(i) >= 0, then guess(i) is guaranteed to be
+     * between 0 and chopstick_count().
+     * Negative values codify status of the guess.
+     * They can be PENDING_GUESS, NOT_PLAYING or INVALID_GUESS;
+     * their meaning are documented below.
      *
      * player_index is assumed to be between 0 and player_count()-1.
      */
     int guess( int player_index );
+
+
+    /* Non-guess values returned by core::guess(). */
+    enum {
+        /* The player has still not made its guess, but its guess will,
+         * eventually, be updated.
+         * Note that, if invoked from inside Player::guess, core::guess
+         * will return PENDING_GUESS for the current player.
+         */
+        PENDING_GUESS = -1,
+
+        /* The player is not playing anymore.
+         * Currently, this only happens when the player's chopstick number
+         * drops to zero.
+         */
+        NOT_PLAYING = -2,
+
+        /* The player had made an invalid guess for this round.
+         */
+        INVALID_GUESS = -3,
+    };
 
     /* Tests if 'possible_guess' is a valid guess according to
      * both the game rules and two "stupidity rules"
