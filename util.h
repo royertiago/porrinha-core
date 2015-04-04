@@ -105,5 +105,10 @@ namespace core {
      * or if it is the first round of the game. */
     int hand( int player_index );
 
+    /* Returns the winner of the last round.
+     * This value is -1 in the first round of the game.
+     */
+    int last_winner();
+
 } // namespace core
 #endif // CORE_UTIL_H

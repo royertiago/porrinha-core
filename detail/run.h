@@ -36,6 +36,9 @@ namespace core { namespace detail {
     /* Number players that are still playing the game. */
     extern int active_player_count;
 
+    /* Player that won last round. */
+    extern int last_winner;
+
     void run_game( std::vector<std::unique_ptr<Player>>&&, int choptsicks );
 }} // namespace core::detail
 

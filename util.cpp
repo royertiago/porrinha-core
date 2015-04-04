@@ -42,4 +42,8 @@ namespace core {
         return detail::last_hand[player_index];
     }
 
+    int last_winner() {
+        return detail::last_winner;
+    }
+
 } // namespace core
