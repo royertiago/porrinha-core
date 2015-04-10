@@ -95,11 +95,12 @@ namespace core {
         }
 
         std::vector< std::unique_ptr<Player> > players;
-        for( auto type : command_line::player_list )
-            players.emplace_back( factories[type](
-                (int) command_line::player_list.size(),
-                command_line::chopsticks
-            ));
+        for( auto type : command_line::player_list ) {
+            std::vector< char > string(type.begin(), type.end());
+            string.push_back('\0');
+            char * args[] = {string.data(), nullptr};
+            players.emplace_back( factories[type]( 1, args ) );
+        }
 
         detail::run_game( std::move(players), command_line::chopsticks );
         return 0;
