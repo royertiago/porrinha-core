@@ -40,6 +40,9 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
     std::vector< int > hands(players.size(), -1);
     last_hand = hands;
 
+    for( int i = 0; i < players.size(); ++i )
+        players[i]->begin_game();
+
     while( active_player_count >= 2 ) {
         guesses = guess_template;
 
@@ -123,7 +126,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         for( int i = 0; i < players.size(); ++i ) {
             int p = (i + starting_player) % players.size();
             if( guesses[p] == NOT_PLAYING ) continue;
-            players[p]->settle_round();
+            players[p]->end_round();
             std::cout << "Player " << p << " (" << players[p]->name() << ")"
                 << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
         }
@@ -160,6 +163,9 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
             starting_player = (starting_player + 1) % players.size();
 
     } // while( active_player_count >= 2 )
+
+    for( int i = 0; i < players.size(); ++i )
+        players[i]->begin_game();
 
     std::cout << "Game ended. \n"
         << "Loser: player " << starting_player
