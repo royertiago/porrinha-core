@@ -3,25 +3,46 @@
 
 /* Utility functions to query the current state of the game.
  *
- * These functions may be called only when the game is running;
- * that is, after the first call to Player::hand.
- *
- * All these values are deductible from the parameters
- * passed to the player methods.
- * They are only replicated here for convenience.
+ * Not all functions may be called at any moment.
+ * There are four sections
+ * ("global information", "overall game queries",
+ * "individual round queries" and "end round information"),
+ * each with appropriate call time.
+ * These call times are described in each section.
  */
 
 #include "player.h"
 
 namespace core {
 
-// Global information
+/* Global information
+ *
+ * These methods give information that is persistent across games.
+ * They are all avaliable when the factory functions are called,
+ * and shall remain valid until the destruction of every player object.
+ */
+
+    /* Returns the number of avaliable players that can appear in a game.
+     *
+     * Currently, since there is only one game per program execution,
+     * this value equals player_count().
+     */
     int global_player_count();
 
-// Overall game queries
+/* Overall game queries
+ *
+ * This infromation exists "internally" in a game.
+ * It is updated only after the round ended.
+ *
+ * It shall be valid when Player::begin_game is called for the first player,
+ * and shall remain valid until Player::end_game is called for the last player.
+ */
 
     /* Returns the number of players of this game.
-     * The count includes the inactive players. */
+     *
+     * This number includes the players that are now active,
+     * by emptying their hands during this game.
+     */
     int player_count();
 
     /* Returns the number of active players of this game;
@@ -43,8 +64,6 @@ namespace core {
      */
     int index( Player * me );
 
-// Individual round queries
-
     /* Returns the number of chopsticks that the respective player have.
      *
      * Note that this is _not_ the number of chopsticks
@@ -53,6 +72,14 @@ namespace core {
      * player_index is assumed to be between 0 and player_count()-1.
      */
     int chopsticks( int player_index );
+
+/* Individual round queries
+ *
+ * This information is updated during a round.
+ * The information begins the round "scarce" and is built as the round progresses.
+ * Any data created during a round shall remain avaliable through these functions
+ * until the call of Player::end_round.
+ */
 
     /* Returns the current guess of the selected player.
      *
@@ -99,7 +126,14 @@ namespace core {
      */
     bool valid_guess( int possible_guess );
 
-// Last round information
+/* End round information
+ *
+ * Information that becomes avaliable only at the end of a round.
+ *
+ * It shall be avaliable when Player::end_round is called for the first player
+ * and shall remain valid until the first Player::end_round call
+ * of the following round.
+ */
 
     /* Returns the number of chopsticks the player had in hand
      * in the last round.
