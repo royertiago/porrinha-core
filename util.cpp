@@ -2,6 +2,10 @@
 #include "core/detail/run.h"
 
 namespace core {
+    int global_player_count() {
+        return detail::global_player_count;
+    }
+
     int player_count() {
         return detail::chopsticks.size();
     }

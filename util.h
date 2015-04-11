@@ -15,6 +15,9 @@
 
 namespace core {
 
+// Global information
+    int global_player_count();
+
 // Overall game queries
 
     /* Returns the number of players of this game.

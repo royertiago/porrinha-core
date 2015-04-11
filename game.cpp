@@ -113,16 +113,19 @@ namespace core {
         factories.clear();
         factories.insert( player_options.begin(), player_options.end() );
 
+        using namespace command_line;
+
         command_line::parse(std::move(args));
 
-        if( command_line::player_list.size() < 2 ) {
+        if( player_list.size() < 2 ) {
             std::cerr << "There must be at least two players in this game!\n";
             std::exit(1);
         }
 
+        detail::global_player_count = player_list.size();
+
         std::vector< std::unique_ptr<Player> > players;
         for( unsigned i = 0; i < command_line::player_list.size(); i++ ) {
-            using namespace command_line;
             players.emplace_back( factories[player_list[i]](std::move(arg_list[i])) );
         }
 

@@ -36,6 +36,14 @@ namespace core { namespace detail {
     /* Number players that are still playing the game. */
     extern int active_player_count;
 
+    /* Number of players that are avaliable to create games.
+     * This value is independent of the current game.
+     *
+     * This variable is set directly by core::play,
+     * since it needs to be avaliable since before any PlayerFactory invocation.
+     */
+    extern int global_player_count;
+
     /* Player that won last round. */
     extern int last_winner;
 

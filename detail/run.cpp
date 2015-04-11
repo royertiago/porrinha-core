@@ -11,6 +11,7 @@ std::vector<int> last_hand;
 std::vector<int> guesses;
 int chopstick_count;
 int active_player_count;
+int global_player_count;
 int last_winner;
 
 void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chopsticks ) {
