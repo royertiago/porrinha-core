@@ -123,14 +123,6 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
          */
         last_hand.swap( hands );
 
-        for( int i = 0; i < players.size(); ++i ) {
-            int p = (i + starting_player) % players.size();
-            if( guesses[p] == NOT_PLAYING ) continue;
-            players[p]->end_round();
-            std::cout << "Player " << p << " (" << players[p]->name() << ")"
-                << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
-        }
-
         // Contabilizing the winner
         if( last_winner == -1 ) {
             std::cout << "No one guessed the right value (" << hand_sum << ").\n"
@@ -139,28 +131,36 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
             do {
                 starting_player = (starting_player + 1) % players.size();
             } while( guess_template[starting_player] == NOT_PLAYING );
+        }
+        else {
+            std::cout << "Player " << last_winner
+                << " (" << players[last_winner]->name() << ")"
+                << " guessed right!\n";
 
-            continue;
+            chopstick_count--;
+            starting_player = last_winner;
+            chopsticks[last_winner]--;
+            if( chopsticks[last_winner] == 0 ) {
+                std::cout << "Player " << last_winner
+                    << " (" << players[last_winner]->name() << ")"
+                    << " left the game.\n";
+
+                // We need a new starter.
+                guess_template[last_winner] = NOT_PLAYING;
+                active_player_count--;
+                while( guess_template[starting_player] == NOT_PLAYING )
+                    starting_player = (starting_player + 1) % players.size();
+            }
         }
 
-        std::cout << "Player " << last_winner
-            << " (" << players[last_winner]->name() << ")"
-            << " guessed right!\n";
-
-        chopstick_count--;
-        starting_player = last_winner;
-        chopsticks[last_winner]--;
-        if( chopsticks[last_winner] != 0 )
-            continue;
-
-        std::cout << "Player " << last_winner
-            << " (" << players[last_winner]->name() << ")"
-            << " left the game.\n";
-
-        guess_template[last_winner] = NOT_PLAYING;
-        active_player_count--;
-        while( guess_template[starting_player] == NOT_PLAYING )
-            starting_player = (starting_player + 1) % players.size();
+        // Calling Player::end_round() for each player
+        for( int i = 0; i < players.size(); ++i ) {
+            int p = (i + starting_player) % players.size();
+            if( guesses[p] == NOT_PLAYING ) continue;
+            players[p]->end_round();
+            std::cout << "Player " << p << " (" << players[p]->name() << ")"
+                << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
+        }
 
     } // while( active_player_count >= 2 )
 
