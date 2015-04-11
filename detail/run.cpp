@@ -54,8 +54,8 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
                 std::clog << "Player " << players[p]->name()
                     << ", at position " << p << ", chosen "
                     << hands[p] << " chopsticks as its hand, "
-                    "despite having only " << chopsticks[p] << " left.\n"
-                    "Resetting its hand to 0...\n";
+                    << "despite having only " << chopsticks[p] << " left.\n"
+                    << "Resetting its hand to 0...\n";
                 hands[p] = 0;
             }
             hand_sum += hands[p];
@@ -71,7 +71,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
                 std::clog << "Player " << players[p]->name()
                     << ", at position " << p << ", stupidly guessed "
                     << guesses[i] << ".\n"
-                    << "I will reset it to a negative value"
+                    << "I will reset it to a negative value "
                     << "to indicate an invalid guess.\n";
                 guesses[p] = INVALID_GUESS;
                 continue;
@@ -81,7 +81,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
                     << ", at position " << i << ", stupidly guessed "
                     << guesses[p] << ", despite having only "
                     << chopstick_count << " chopsticks left on the table.\n"
-                    << "I will reset it to a negative value"
+                    << "I will reset it to a negative value "
                     << "to indicate an invalid guess.\n";
                 guesses[p] = INVALID_GUESS;
                 continue;
@@ -130,7 +130,7 @@ void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chops
         // Contabilizing the winner
         if( last_winner == -1 ) {
             std::cout << "No one guessed the right value (" << hand_sum << ").\n"
-                "Next round...\n";
+                << "Next round...\n";
 
             do {
                 starting_player = (starting_player + 1) % players.size();
