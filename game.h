@@ -3,13 +3,13 @@
 
 #include <utility>
 #include "player.h"
+#include "cmdline/args.h"
 
 namespace core {
 
     /* Runs the game. */
     int play(
-        int argc,
-        char ** argv, 
+        cmdline::args&&,
         std::vector< std::pair<const char *, PlayerFactory> >
     );
 
