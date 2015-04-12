@@ -12,6 +12,9 @@ namespace core { namespace command_line {
 "For example,\n"
 "    ./main [human] --name Zero [human] --name One\n"
 "\n"
+"Note that, when using this format, you need to supply any game's core argument\n"
+"before the first player name.\n"
+"\n"
 "Artificial intelligence programmers are advised to implement the option\n"
 "'--help' for their AI's. Refer to that help, in each artificial intelligence,\n"
 "for more information.\n"
@@ -87,16 +90,11 @@ namespace core {
                         std::exit(1);
                     }
                     player_list.push_back(player);
-                    cmdline::args subargs;
+
+                    cmdline::args subargs = args.subarg_until( is_player );
                     subargs.program_name(player);
-                    while( args.size() > 0 ) {
-                        std::string next_arg = args.peek();
-                        if( is_player(next_arg) )
-                            break;
-                        subargs.push_back(next_arg);
-                        args.shift();
-                    }
                     arg_list.push_back( subargs );
+
                     continue;
                 }
 
