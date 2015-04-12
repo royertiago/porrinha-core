@@ -5,6 +5,7 @@
 
 namespace core { namespace detail {
 
+std::vector<std::unique_ptr<Player>> players;
 std::map< Player *, int > position;
 std::vector<int> chopsticks;
 std::vector<int> last_hand;
@@ -14,7 +15,7 @@ int active_player_count;
 int global_player_count;
 int last_winner;
 
-void run_game( std::vector<std::unique_ptr<Player>>&& players, int initial_chopsticks ) {
+void run_game( int initial_chopsticks ) {
     guesses.resize( players.size() );
     last_winner = -1;
 

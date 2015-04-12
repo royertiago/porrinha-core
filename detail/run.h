@@ -13,6 +13,10 @@
 #include "player.h"
 
 namespace core { namespace detail {
+    /* List of players, indexed by their position.
+     */
+    extern std::vector<std::unique_ptr<Player>> players;
+
     /* Reverse map: it gives the player position
      * based on a pointer to it.
      */
@@ -47,7 +51,13 @@ namespace core { namespace detail {
     /* Player that won last round. */
     extern int last_winner;
 
-    void run_game( std::vector<std::unique_ptr<Player>>&&, int choptsicks );
+    /* Run a game with the specified number of chopsticks.
+     *
+     * This function assumse that both the variables
+     * 'global_player_count' and 'players'
+     * had already been set.
+     */
+    void run_game( int choptsicks );
 }} // namespace core::detail
 
 #endif // CORE_DETAIL_RUN_H

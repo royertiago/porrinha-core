@@ -122,12 +122,13 @@ namespace core {
 
         detail::global_player_count = player_list.size();
 
-        std::vector< std::unique_ptr<Player> > players;
         for( unsigned i = 0; i < command_line::player_list.size(); i++ ) {
-            players.emplace_back( factories[player_list[i]](std::move(arg_list[i])) );
+            detail::players.emplace_back(
+                factories[player_list[i]](std::move(arg_list[i]))
+            );
         }
 
-        detail::run_game( std::move(players), command_line::chopsticks );
+        detail::run_game( command_line::chopsticks );
         return 0;
     }
 
