@@ -129,6 +129,22 @@ namespace core { namespace detail {
      */
     int get_hand( int index );
 
+    /* Calls player[index]->guess() and apply sanity checks.
+     * Returns INVALID_GUESS if the player
+     *  - made a negative guess; or
+     *  - made a guess higher than chopstick_count; or
+     *  -guessed an already guessed value.
+     * Otherwise, returns the correct player guess.
+     *
+     * Variables assumed valid:
+     *  players
+     *  chopstick_count
+     *
+     * Updated variables:
+     *  players (calls non-const method on one of them).
+     */
+    int get_guess( int index );
+
     /* Execute a round with the current players.
      *
      * Variables assumed valid:

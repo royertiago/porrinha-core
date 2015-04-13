@@ -46,10 +46,43 @@ int get_hand( const int index ) {
             << hand << " chopsticks as its hand, "
             << "despite having only " << chopsticks[index] << " left.\n"
             << "Resetting its hand to 0...\n";
-        hand = 0;
+        return 0;
     }
 
     return hand;
+}
+
+int get_guess( const int index ) {
+    int guess = players[index]->guess();
+    if( guess < 0 ) {
+        std::clog << "Player " << players[index]->name()
+            << ", at position " << index << ", stupidly guessed "
+            << guess << ".\n"
+            << "I will reset it to a negative value "
+            << "to indicate an invalid guess.\n";
+        return INVALID_GUESS;
+    }
+    if( guess > chopstick_count ) {
+        std::clog << "Player " << players[index]->name()
+            << ", at position " << index << ", stupidly guessed "
+            << guess << ", despite having only "
+            << chopstick_count << " chopsticks left on the table.\n"
+            << "I will reset it to a negative value "
+            << "to indicate an invalid guess.\n";
+        return INVALID_GUESS;
+    }
+    for( int j = 0; j < players.size(); ++j )
+        if( j != index && guess == guesses[j] ) {
+            std::clog << "Player " << players[index]->name()
+                << ", at position " << index << ", guessed the value "
+                << guess << " - thats the same value that player "
+                << players[j]->name() << " guessed.\n"
+                << "I will reset it to a negative value "
+                << "to indicate an invalid guess.\n";
+            return INVALID_GUESS;
+        }
+
+    return guess;
 }
 
 void run_round() {
@@ -71,40 +104,7 @@ void run_round() {
     for( int i = 0; i < players.size(); ++i ) {
         int p = (i + starting_player) % players.size();
         if( guesses[p] == NOT_PLAYING ) continue;
-        guesses[p] = players[p]->guess();
-        if( guesses[p] < 0 ) {
-            std::clog << "Player " << players[p]->name()
-                << ", at position " << p << ", stupidly guessed "
-                << guesses[i] << ".\n"
-                << "I will reset it to a negative value "
-                << "to indicate an invalid guess.\n";
-            guesses[p] = INVALID_GUESS;
-            continue;
-        }
-        if( guesses[p] > chopstick_count ) {
-            std::clog << "Player " << players[p]->name()
-                << ", at position " << i << ", stupidly guessed "
-                << guesses[p] << ", despite having only "
-                << chopstick_count << " chopsticks left on the table.\n"
-                << "I will reset it to a negative value "
-                << "to indicate an invalid guess.\n";
-            guesses[p] = INVALID_GUESS;
-            continue;
-        }
-        for( int j = 0; j < players.size(); ++j )
-            if( j != p && guesses[p] == guesses[j] ) {
-                std::clog << "Player " << players[p]->name()
-                    << ", at position " << p << ", guessed the value "
-                    << guesses[p] << " - thats the same value that player "
-                    << players[j]->name() << " guessed.\n"
-                    << "I will reset it to a negative value "
-                    << "to indicate an invalid guess.\n";
-                guesses[p] = INVALID_GUESS;
-                break;
-                /* Note we are only breaking from the inner `for`;
-                 * that's okay since the test below this value
-                 * will always fail, and we get to restart the cycle. */
-            }
+        guesses[p] = get_guess(p);
 
         /* Its easier to do the last_winner test now
          * than to loop through the vector again.
