@@ -38,7 +38,8 @@ namespace core { namespace command_line {
 #include <vector>
 #include <getopt.h>
 #include "game.h"
-#include "detail/run.h"
+#include "core/detail/run.h"
+#include "core/detail/variables.h"
 
 namespace core {
 

@@ -1,5 +1,5 @@
 #include "util.h"
-#include "core/detail/run.h"
+#include "core/detail/variables.h"
 
 namespace core {
     int global_player_count() {

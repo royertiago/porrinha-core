@@ -1,6 +1,7 @@
 // Implementation of core/detail/run.h.
 #include <iostream>
 #include "run.h"
+#include "core/detail/variables.h"
 #include "core/util.h" // constants PENDING_GUESS, NOT_PLAYING, INVALID_GUESS
 
 namespace core { namespace detail {
