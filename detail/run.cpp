@@ -126,8 +126,7 @@ void run_game( int initial_chopsticks ) {
 
         // Contabilizing the winner
         if( last_winner == -1 ) {
-            std::cout << "No one guessed the right value (" << hand_sum << ").\n"
-                << "Next round...\n";
+            std::cout << "No one guessed the right value (" << hand_sum << ").\n";
 
             do {
                 starting_player = (starting_player + 1) % players.size();
@@ -162,6 +161,7 @@ void run_game( int initial_chopsticks ) {
             std::cout << "Player " << p << " (" << players[p]->name() << ")"
                 << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
         }
+        std::cout << "Next round...\n\n";
 
     } // while( active_player_count >= 2 )
 
