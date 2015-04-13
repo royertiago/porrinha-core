@@ -100,7 +100,7 @@ namespace core { namespace detail {
      *
      * Updated variables:
      *  position
-     *  chopstics
+     *  chopsticks
      *  current_hand
      *  last_hand
      *  guesses
@@ -114,6 +114,27 @@ namespace core { namespace detail {
      * global_player_count, and hand_sum.
      */
     void init( int initial_chopsticks );
+
+    /* Execute a round with the current players.
+     *
+     * Variables assumed valid:
+     *  players
+     *  chopsticks
+     *  guess_template
+     *  starting_player
+     *
+     * Updated variables:
+     *  chopsticks
+     *  current_hand
+     *  last_hand
+     *  guesses
+     *  guess_template
+     *  chopstick_count
+     *  active_player_count
+     *  starting_player
+     *  last_winner
+     */
+    void run_round();
 }} // namespace core::detail
 
 #endif // CORE_DETAIL_RUN_H
