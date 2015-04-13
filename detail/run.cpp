@@ -91,13 +91,13 @@ void run_round() {
                     << ", at position " << p << ", guessed the value "
                     << guesses[p] << " - thats the same value that player "
                     << players[j]->name() << " guessed.\n"
-                    << "I will reset it to a negative value"
+                    << "I will reset it to a negative value "
                     << "to indicate an invalid guess.\n";
                 guesses[p] = INVALID_GUESS;
                 break;
                 /* Note we are only breaking from the inner `for`;
                  * that's okay since the test below this value
-                 * will alway fail, and we get to restart the cycle. */
+                 * will always fail, and we get to restart the cycle. */
             }
 
         /* Its easier to do the last_winner test now
