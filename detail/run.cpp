@@ -38,6 +38,20 @@ void init( int initial_chopsticks ) {
     last_winner = -1;
 }
 
+int get_hand( const int index ) {
+    int hand = players[index]->hand();
+    if( hand < 0 || hand > chopsticks[index] ) {
+        std::clog << "Player " << players[index]->name()
+            << ", at position " << index << ", chosen "
+            << hand << " chopsticks as its hand, "
+            << "despite having only " << chopsticks[index] << " left.\n"
+            << "Resetting its hand to 0...\n";
+        hand = 0;
+    }
+
+    return hand;
+}
+
 void run_round() {
     guesses = guess_template;
 
@@ -48,15 +62,7 @@ void run_round() {
     for( int i = 0; i < players.size(); ++i ) {
         int p = (i + starting_player) % players.size();
         if( guesses[p] == NOT_PLAYING ) continue;
-        current_hand[p] = players[p]->hand();
-        if( current_hand[p] < 0 || current_hand[p] > chopsticks[p] ) {
-            std::clog << "Player " << players[p]->name()
-                << ", at position " << p << ", chosen "
-                << current_hand[p] << " chopsticks as its hand, "
-                << "despite having only " << chopsticks[p] << " left.\n"
-                << "Resetting its hand to 0...\n";
-            current_hand[p] = 0;
-        }
+        current_hand[p] = get_hand(p);
         hand_sum += current_hand[p];
     }
 

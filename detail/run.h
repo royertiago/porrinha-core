@@ -115,6 +115,20 @@ namespace core { namespace detail {
      */
     void init( int initial_chopsticks );
 
+    /* Calls player[index]->hand() and apply sanity checks.
+     * Returns zero if the player did not return a valid value;
+     * otherwise, return the correct player hand
+     * (which might be zero).
+     *
+     * Variables assumed valid:
+     *  players
+     *  chopsticks
+     *
+     * Updated variables:
+     *  players (calls non-const method on one of them).
+     */
+    int get_hand( int index );
+
     /* Execute a round with the current players.
      *
      * Variables assumed valid:
