@@ -9,11 +9,15 @@ std::vector<std::unique_ptr<Player>> players;
 std::map< Player *, int > position;
 std::vector<int> chopsticks;
 std::vector<int> last_hand;
+std::vector<int> current_hand;
 std::vector<int> guesses;
+std::vector<int> guess_template;
 int chopstick_count;
 int active_player_count;
 int global_player_count;
 int last_winner;
+int starting_player;
+int hand_sum;
 
 void run_game( int initial_chopsticks ) {
     guesses.resize( players.size() );
@@ -27,19 +31,11 @@ void run_game( int initial_chopsticks ) {
 
     chopstick_count = initial_chopsticks * players.size();
     active_player_count = players.size();
-    int starting_player = 0;
+    starting_player = 0;
 
-    /* This vector will be the initial empty guess vector
-     * for each round.
-     *
-     * It will start populated as PENDING_GUESS.
-     * We will change it to NOT_PLAYING as the game progresses.
-     */
-    std::vector< int > guess_template( players.size(), PENDING_GUESS );
-
-    // Number of chopsticks each player has in hand.
-    std::vector< int > hands(players.size(), -1);
-    last_hand = hands;
+    guess_template = std::vector< int >( players.size(), PENDING_GUESS );
+    current_hand = std::vector< int >( players.size(), -1 );
+    last_hand = current_hand;
 
     for( int i = 0; i < players.size(); ++i )
         players[i]->begin_game();
@@ -50,20 +46,20 @@ void run_game( int initial_chopsticks ) {
         std::cout << chopstick_count << " chopsticks on the table...\n";
 
         // Pick each player hand
-        int hand_sum = 0;
+        hand_sum = 0;
         for( int i = 0; i < players.size(); ++i ) {
             int p = (i + starting_player) % players.size();
             if( guesses[p] == NOT_PLAYING ) continue;
-            hands[p] = players[p]->hand();
-            if( hands[p] < 0 || hands[p] > chopsticks[p] ) {
+            current_hand[p] = players[p]->hand();
+            if( current_hand[p] < 0 || current_hand[p] > chopsticks[p] ) {
                 std::clog << "Player " << players[p]->name()
                     << ", at position " << p << ", chosen "
-                    << hands[p] << " chopsticks as its hand, "
+                    << current_hand[p] << " chopsticks as its hand, "
                     << "despite having only " << chopsticks[p] << " left.\n"
                     << "Resetting its hand to 0...\n";
-                hands[p] = 0;
+                current_hand[p] = 0;
             }
-            hand_sum += hands[p];
+            hand_sum += current_hand[p];
         }
 
         // Pick each player guess
@@ -115,14 +111,14 @@ void run_game( int initial_chopsticks ) {
 
         /* Settling the round
          * We need first to keep the integrity of last_hand.
-         * Since we will not use the vector hands in this iteration,
+         * Since we will not use the vector current_hand in this iteration,
          * we may simply swap both values.
          *
-         * Note we must not std::move hands to last_hand
-         * because in the next loop we will assume hands has size players.size(),
+         * Note we must not std::move current_hand to last_hand
+         * because in the next loop we will assume current_hand has size players.size(),
          * so we would need to realocate space.
          */
-        last_hand.swap( hands );
+        last_hand.swap( current_hand );
 
         // Contabilizing the winner
         if( last_winner == -1 ) {

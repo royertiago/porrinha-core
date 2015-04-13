@@ -28,14 +28,37 @@ namespace core { namespace detail {
     /* Number of chopsticks each player held in hand last round. */
     extern std::vector<int> last_hand;
 
+    /* Number of chopsticks each player holds in hand in this round.
+     *
+     * This vector is swapped with `last_hand` every round.
+     */
+    extern std::vector<int> current_hand;
+
     /* Guesses each player has made this round.
      * This is the vector `other_guesses` passed to the players
      * when invoking Player::guess.
      */
     extern std::vector<int> guesses;
 
+    /* Initial empty guess vector for each round.
+     *
+     * At the beginning of the round, the vector `guesses`
+     * will be replaced by this vector.
+     *
+     * It will start populated as PENDING_GUESS.
+     * We will change it to NOT_PLAYING as the game progresses.
+     */
+    extern std::vector<int> guess_template;
+
     /* Sum of all avaliable chopsticks in the table. */
     extern int chopstick_count;
+
+    /* Sum of the vector current_hand.
+     * That is, the correct guess for this round.
+     *
+     * It is only updated after current_hand is populated.
+     */
+    extern int hand_sum;
 
     /* Number players that are still playing the game. */
     extern int active_player_count;
@@ -50,6 +73,9 @@ namespace core { namespace detail {
 
     /* Player that won last round. */
     extern int last_winner;
+
+    /* Player that starts guessing this round. */
+    extern int starting_player;
 
     /* Run a game with the specified number of chopsticks.
      *
