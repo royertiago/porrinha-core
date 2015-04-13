@@ -145,6 +145,21 @@ namespace core { namespace detail {
      */
     int get_guess( int index );
 
+    /* Decides if someone has won this round.
+     *
+     * Variables assumed valid:
+     *  current_hand
+     *
+     * Updated vairables:
+     *  chopsticks
+     *  last_hand
+     *  guess_template
+     *  chopstick_count
+     *  active_player_count
+     *  starting_player
+     */
+    void contabilize_round_winner();
+
     /* Execute a round with the current players.
      *
      * Variables assumed valid:

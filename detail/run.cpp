@@ -85,6 +85,50 @@ int get_guess( const int index ) {
     return guess;
 }
 
+void contabilize_round_winner() {
+    /* We need first to keep the integrity of last_hand.
+     * Since we will not use the vector current_hand in this iteration,
+     * we may simply swap both values.
+     *
+     * Note we must not std::move current_hand to last_hand
+     * because in the next loop we will assume current_hand has size players.size(),
+     * so we would need to realocate space.
+     */
+    last_hand.swap( current_hand );
+
+    // Contabilizing the winner
+    if( last_winner == -1 ) {
+        std::cout << "No one guessed the right value (" << hand_sum << ").\n";
+
+        do {
+            starting_player = (starting_player + 1) % players.size();
+        } while( guess_template[starting_player] == NOT_PLAYING );
+
+        return;
+    }
+
+    std::cout << "Player " << last_winner
+        << " (" << players[last_winner]->name() << ")"
+        << " guessed right!\n";
+
+    chopstick_count--;
+    starting_player = last_winner;
+    chopsticks[last_winner]--;
+
+    if( chopsticks[last_winner] != 0 )
+        return;
+
+    std::cout << "Player " << last_winner
+        << " (" << players[last_winner]->name() << ")"
+        << " left the game.\n";
+
+    // We need a new starter.
+    guess_template[last_winner] = NOT_PLAYING;
+    active_player_count--;
+    while( guess_template[starting_player] == NOT_PLAYING )
+        starting_player = (starting_player + 1) % players.size();
+}
+
 void run_round() {
     guesses = guess_template;
 
@@ -113,45 +157,8 @@ void run_round() {
             last_winner = p;
     }
 
-    /* Settling the round
-     * We need first to keep the integrity of last_hand.
-     * Since we will not use the vector current_hand in this iteration,
-     * we may simply swap both values.
-     *
-     * Note we must not std::move current_hand to last_hand
-     * because in the next loop we will assume current_hand has size players.size(),
-     * so we would need to realocate space.
-     */
-    last_hand.swap( current_hand );
+    contabilize_round_winner();
 
-    // Contabilizing the winner
-    if( last_winner == -1 ) {
-        std::cout << "No one guessed the right value (" << hand_sum << ").\n";
-
-        do {
-            starting_player = (starting_player + 1) % players.size();
-        } while( guess_template[starting_player] == NOT_PLAYING );
-    }
-    else {
-        std::cout << "Player " << last_winner
-            << " (" << players[last_winner]->name() << ")"
-            << " guessed right!\n";
-
-        chopstick_count--;
-        starting_player = last_winner;
-        chopsticks[last_winner]--;
-        if( chopsticks[last_winner] == 0 ) {
-            std::cout << "Player " << last_winner
-                << " (" << players[last_winner]->name() << ")"
-                << " left the game.\n";
-
-            // We need a new starter.
-            guess_template[last_winner] = NOT_PLAYING;
-            active_player_count--;
-            while( guess_template[starting_player] == NOT_PLAYING )
-                starting_player = (starting_player + 1) % players.size();
-        }
-    }
 
     // Calling Player::end_round() for each player
     for( int i = 0; i < players.size(); ++i ) {
