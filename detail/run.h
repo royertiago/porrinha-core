@@ -82,8 +82,34 @@ namespace core { namespace detail {
      * This function assumse that both the variables
      * 'global_player_count' and 'players'
      * had already been set.
+     *
+     * This is the "main" function of this file.
+     * All the remaining functions are called by this one.
      */
     void run_game( int choptsicks );
+
+    /* Initialize the variables of the game.
+     *
+     * Variables assumed valid:
+     *  players
+     *
+     * Updated variables:
+     *  guesses
+     *  position
+     *  last_winner
+     *  chopstics
+     *  chopstick_count
+     *  active_player_count
+     *  starting_player
+     *  guess_template
+     *  current_hand
+     *  last_hand
+     *  last_winner
+     *
+     * Essentially, all variables except players,
+     * global_player_count, and hand_sum.
+     */
+    void init( int initial_chopsticks );
 }} // namespace core::detail
 
 #endif // CORE_DETAIL_RUN_H

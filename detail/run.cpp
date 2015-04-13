@@ -19,7 +19,7 @@ int last_winner;
 int starting_player;
 int hand_sum;
 
-void run_game( int initial_chopsticks ) {
+void init( int initial_chopsticks ) {
     guesses.resize( players.size() );
     last_winner = -1;
 
@@ -36,6 +36,10 @@ void run_game( int initial_chopsticks ) {
     guess_template = std::vector< int >( players.size(), PENDING_GUESS );
     current_hand = std::vector< int >( players.size(), -1 );
     last_hand = current_hand;
+}
+
+void run_game( int initial_chopsticks ) {
+    init( initial_chopsticks );
 
     for( int i = 0; i < players.size(); ++i )
         players[i]->begin_game();
