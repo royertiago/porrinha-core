@@ -20,22 +20,22 @@ int starting_player;
 int hand_sum;
 
 void init( int initial_chopsticks ) {
-    guesses.resize( players.size() );
-    last_winner = -1;
-
     for( unsigned i = 0; i < players.size(); i++ )
         position[players[i].get()] = i;
 
     chopsticks.resize( players.size() );
     std::fill( chopsticks.begin(), chopsticks.end(), initial_chopsticks );
 
+    current_hand = std::vector< int >( players.size(), -1 );
+    last_hand = current_hand;
+
+    guesses.resize( players.size() );
+    guess_template = std::vector< int >( players.size(), PENDING_GUESS );
+
     chopstick_count = initial_chopsticks * players.size();
     active_player_count = players.size();
     starting_player = 0;
-
-    guess_template = std::vector< int >( players.size(), PENDING_GUESS );
-    current_hand = std::vector< int >( players.size(), -1 );
-    last_hand = current_hand;
+    last_winner = -1;
 }
 
 void run_game( int initial_chopsticks ) {

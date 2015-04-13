@@ -25,14 +25,14 @@ namespace core { namespace detail {
     /* Number of chopsticks each player have avaliable. */
     extern std::vector<int> chopsticks;
 
-    /* Number of chopsticks each player held in hand last round. */
-    extern std::vector<int> last_hand;
-
     /* Number of chopsticks each player holds in hand in this round.
      *
      * This vector is swapped with `last_hand` every round.
      */
     extern std::vector<int> current_hand;
+
+    /* Number of chopsticks each player held in hand last round. */
+    extern std::vector<int> last_hand;
 
     /* Guesses each player has made this round.
      * This is the vector `other_guesses` passed to the players
@@ -71,11 +71,16 @@ namespace core { namespace detail {
      */
     extern int global_player_count;
 
-    /* Player that won last round. */
-    extern int last_winner;
-
     /* Player that starts guessing this round. */
     extern int starting_player;
+
+    /* Player that won last round.
+     *
+     * It's the same as starting_player,
+     * unless no one made the right guess last round.
+     * In this case, last_winner == -1.
+     */
+    extern int last_winner;
 
     /* Run a game with the specified number of chopsticks.
      *
@@ -94,16 +99,15 @@ namespace core { namespace detail {
      *  players
      *
      * Updated variables:
-     *  guesses
      *  position
-     *  last_winner
      *  chopstics
+     *  current_hand
+     *  last_hand
+     *  guesses
+     *  guess_template
      *  chopstick_count
      *  active_player_count
      *  starting_player
-     *  guess_template
-     *  current_hand
-     *  last_hand
      *  last_winner
      *
      * Essentially, all variables except players,
