@@ -10,7 +10,7 @@
  * All the variables referred to in the functions' documentation
  * are declared in detail/variables.h.
  */
-
+#include <ostream>
 #include "player.h"
 
 namespace core { namespace detail {
@@ -27,6 +27,13 @@ namespace core { namespace detail {
      *  players
      */
     void set_players( std::vector<std::pair<PlayerFactory, cmdline::args>>&& );
+
+    /* Sets/retrieves the output stream for the functions of this namespace.
+     *
+     * Defaults to std::cout.
+     */
+    void out( std::ostream& );
+    std::ostream & out();
 
     /* Run a game with the specified number of chopsticks.
      *

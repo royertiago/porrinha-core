@@ -19,6 +19,15 @@ int last_winner;
 int starting_player;
 int hand_sum;
 std::vector<int> out_of_game;
+std::ostream * os = &std::cout;
+
+void out( std::ostream& new_os ) {
+    os = &new_os;
+}
+
+std::ostream & out() {
+    return *os;
+}
 
 void set_players( std::vector<std::pair<PlayerFactory, cmdline::args>>&& list ) {
     players = std::vector<std::unique_ptr<Player>>( list.size() );
@@ -108,7 +117,7 @@ void contabilize_round_winner() {
 
     // Contabilizing the winner
     if( last_winner == -1 ) {
-        std::cout << "No one guessed the right value (" << hand_sum << ").\n";
+        out() << "No one guessed the right value (" << hand_sum << ").\n";
 
         do {
             starting_player = (starting_player + 1) % players.size();
@@ -117,7 +126,7 @@ void contabilize_round_winner() {
         return;
     }
 
-    std::cout << "Player " << last_winner
+    out() << "Player " << last_winner
         << " (" << players[last_winner]->name() << ")"
         << " guessed right!\n";
 
@@ -128,7 +137,7 @@ void contabilize_round_winner() {
     if( chopsticks[last_winner] != 0 )
         return;
 
-    std::cout << "Player " << last_winner
+    out() << "Player " << last_winner
         << " (" << players[last_winner]->name() << ")"
         << " left the game.\n";
 
@@ -144,7 +153,7 @@ void contabilize_round_winner() {
 void run_round() {
     guesses = guess_template;
 
-    std::cout << chopstick_count << " chopsticks on the table...\n";
+    out() << chopstick_count << " chopsticks on the table...\n";
 
     // Pick each player hand
     hand_sum = 0;
@@ -177,7 +186,7 @@ void run_round() {
         int p = (i + starting_player) % players.size();
         if( guesses[p] == NOT_PLAYING ) continue;
         players[p]->end_round();
-        std::cout << "Player " << p << " (" << players[p]->name() << ")"
+        out() << "Player " << p << " (" << players[p]->name() << ")"
             << " - hand: " << last_hand[p] << " - guess: " << guesses[p] << '\n';
     }
 }
@@ -191,7 +200,7 @@ std::vector<int> run_game( int initial_chopsticks ) {
     const char * next_round_msg = "";
 
     while( active_player_count >= 2 ) {
-        std::cout << next_round_msg;
+        out() << next_round_msg;
         next_round_msg = "Next round...\n\n";
 
         run_round();
@@ -200,7 +209,7 @@ std::vector<int> run_game( int initial_chopsticks ) {
     for( int i = 0; i < players.size(); ++i )
         players[i]->begin_game();
 
-    std::cout << "Game ended. \n"
+    out() << "Game ended. \n"
         << "Loser: player " << starting_player
         << " (" << players[starting_player]->name() << ")"
         << ", with " << chopsticks[starting_player] << " choptsticks.\n";

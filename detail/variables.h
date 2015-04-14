@@ -6,10 +6,14 @@
 
 #include <map>
 #include <memory>
+#include <ostream>
 #include <vector>
 #include "player.h"
 
 namespace core { namespace detail {
+    /* Output stream used by the functions in this namespace.
+     */
+    extern std::ostream * os;
 
     /* List of players, indexed by their position.
      */
