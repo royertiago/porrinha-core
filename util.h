@@ -80,6 +80,11 @@ namespace core {
      */
     int chopsticks( int player_index );
 
+    /* Returns the choptsick vector.
+     * chopsticks(index) is the same as chopsticks()[index].
+     */
+    const std::vector<int>& chopsticks();
+
 /* Individual round queries
  *
  * This information is updated during a round.
@@ -99,6 +104,11 @@ namespace core {
      * player_index is assumed to be between 0 and player_count()-1.
      */
     int guess( int player_index );
+
+    /* Returns the guess vector.
+     * guess(index) is the same as guess()[index].
+     */
+    const std::vector<int>& guess();
 
 
     /* Non-guess values returned by core::guess(). */
@@ -148,6 +158,11 @@ namespace core {
      * Is -1 if the player had not played last round,
      * or if it is the first round of the game. */
     int hand( int player_index );
+
+    /* Returns the hand vector.
+     * hand(index) is hand()[index].
+     */
+    const std::vector<int>& hand();
 
     /* Returns the winner of the last round.
      * This value is -1 in the first round of the game.

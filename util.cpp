@@ -33,8 +33,16 @@ namespace core {
         return detail::chopsticks[player_index];
     }
 
+    const std::vector<int> & chopsticks() {
+        return detail::chopsticks;
+    }
+
     int guess( int player_index ) {
         return detail::guesses[player_index];
+    }
+
+    const std::vector<int> & guess() {
+        return detail::guesses;
     }
 
     bool valid_guess( int possible_guess ) {
@@ -44,6 +52,10 @@ namespace core {
             if( guess == possible_guess )
                 return false;
         return true;
+    }
+
+    const std::vector<int>& hand() {
+        return detail::last_hand;
     }
 
     int hand( int player_index ) {
