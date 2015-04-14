@@ -3,7 +3,7 @@
 
 namespace core {
     int global_player_count() {
-        return detail::global_player_count;
+        return detail::players.size();
     }
 
     int player_count() {

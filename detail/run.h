@@ -21,11 +21,10 @@ namespace core { namespace detail {
      * Each factory will be called with the arguments it is paired with.
      *
      * This function guarantees that the variable 'players'
-     * will be of size global_player_count before calling any factory.
+     * will have its final size before calling any factory function.
      *
      * Updated variables:
      *  players
-     *  global_player_count
      */
     void set_players( std::vector<std::pair<PlayerFactory, cmdline::args>>&& );
 
@@ -38,7 +37,6 @@ namespace core { namespace detail {
      *
      * Variables assumed valid:
      *  players
-     *  global_player_count
      */
     void run_game( int choptsicks );
 
@@ -59,8 +57,7 @@ namespace core { namespace detail {
      *  starting_player
      *  last_winner
      *
-     * Essentially, all variables except players,
-     * global_player_count, and hand_sum.
+     * Essentially, all variables except players and hand_sum.
      */
     void init( int initial_chopsticks );
 
