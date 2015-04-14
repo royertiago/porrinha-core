@@ -24,6 +24,9 @@ namespace core { namespace command_line {
 "    Chose the initial number of chopsticks.\n"
 "    Default value: 3.\n"
 "\n"
+"--disable-game-output\n"
+"    Disable the output of the game outcome every round.\n"
+"\n"
 "--list\n"
 "    List avaliable players and quit.\n"
 "\n"
@@ -41,6 +44,13 @@ namespace core { namespace command_line {
 #include "core/util.h"
 #include "core/detail/run.h"
 #include "core/detail/variables.h"
+
+namespace {
+    /* Unopened output stream.
+     * Outputting to this stream produces nothing.
+     */
+    std::ostream null_os(0);
+} // anonymous namespace
 
 namespace core {
 
@@ -73,6 +83,10 @@ namespace core {
                 }
                 if( arg == "--chopsticks" ) {
                     args >> chopsticks;
+                    continue;
+                }
+                if( arg == "--disable-game-output" ) {
+                    detail::out(null_os);
                     continue;
                 }
                 if( factories.count(arg) == 1 ) {
