@@ -11,15 +11,34 @@
  * are declared in detail/variables.h.
  */
 
+#include "player.h"
+
 namespace core { namespace detail {
+    /* Sets the players for this game.
+     * This function is like a "constructor" for this namespace.
+     *
+     * Each argument in the list is a pair<factory, args>.
+     * Each factory will be called with the arguments it is paired with.
+     *
+     * This function guarantees that the variable 'players'
+     * will be of size global_player_count before calling any factory.
+     *
+     * Updated variables:
+     *  players
+     *  global_player_count
+     */
+    void set_players( std::vector<std::pair<PlayerFactory, cmdline::args>>&& );
+
     /* Run a game with the specified number of chopsticks.
      *
-     * This function assumse that both the variables
-     * 'global_player_count' and 'players'
-     * had already been set.
+     * This function assumse that set_players had already been called.
      *
      * This is the "main" function of this file.
      * All the remaining functions are called by this one.
+     *
+     * Variables assumed valid:
+     *  players
+     *  global_player_count
      */
     void run_game( int choptsicks );
 

@@ -48,8 +48,7 @@ namespace core {
     namespace command_line {
 
         int chopsticks = 3;
-        std::vector< std::string > player_list;
-        std::vector< cmdline::args > arg_list;
+        std::vector< std::pair<PlayerFactory, cmdline::args> > player_list;
 
         /* Returns true if str is of the format [string]. */
         bool is_player( const std::string& str ) {
@@ -76,8 +75,10 @@ namespace core {
                     continue;
                 }
                 if( factories.count(arg) == 1 ) {
-                    player_list.push_back(arg);
-                    arg_list.push_back(cmdline::args());
+                    player_list.push_back( std::make_pair(
+                        factories[arg],
+                        cmdline::args()
+                    ));
                     continue;
                 }
                 if( arg == "" ) {
@@ -90,12 +91,13 @@ namespace core {
                         std::cerr << "Player " << player << " not in player database.\n";
                         std::exit(1);
                     }
-                    player_list.push_back(player);
-
                     cmdline::args subargs = args.subarg_until( is_player );
                     subargs.program_name(player);
-                    arg_list.push_back( subargs );
 
+                    player_list.emplace_back( std::make_pair(
+                        factories[player],
+                        std::move(subargs)
+                    ));
                     continue;
                 }
 
@@ -121,13 +123,7 @@ namespace core {
             std::exit(1);
         }
 
-        detail::global_player_count = player_list.size();
-
-        for( unsigned i = 0; i < command_line::player_list.size(); i++ ) {
-            detail::players.emplace_back(
-                factories[player_list[i]](std::move(arg_list[i]))
-            );
-        }
+        detail::set_players( std::move(player_list) );
 
         detail::run_game( command_line::chopsticks );
         return 0;

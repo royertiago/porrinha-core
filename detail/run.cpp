@@ -20,6 +20,14 @@ int last_winner;
 int starting_player;
 int hand_sum;
 
+void set_players( std::vector<std::pair<PlayerFactory, cmdline::args>>&& list ) {
+    players = std::vector<std::unique_ptr<Player>>( list.size() );
+    global_player_count = players.size();
+
+    for( unsigned i = 0; i < list.size(); i++ )
+        players[i].reset(list[i].first( std::move(list[i].second) ));
+}
+
 void init( int initial_chopsticks ) {
     for( unsigned i = 0; i < players.size(); i++ )
         position[players[i].get()] = i;
