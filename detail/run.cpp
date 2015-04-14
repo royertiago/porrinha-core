@@ -18,6 +18,7 @@ int active_player_count;
 int last_winner;
 int starting_player;
 int hand_sum;
+std::vector<int> out_of_game;
 
 void set_players( std::vector<std::pair<PlayerFactory, cmdline::args>>&& list ) {
     players = std::vector<std::unique_ptr<Player>>( list.size() );
@@ -43,6 +44,8 @@ void init( int initial_chopsticks ) {
     active_player_count = players.size();
     starting_player = 0;
     last_winner = -1;
+
+    out_of_game.clear();
 }
 
 int get_hand( const int index ) {
@@ -129,6 +132,8 @@ void contabilize_round_winner() {
         << " (" << players[last_winner]->name() << ")"
         << " left the game.\n";
 
+    out_of_game.push_back( last_winner );
+
     // We need a new starter.
     guess_template[last_winner] = NOT_PLAYING;
     active_player_count--;
@@ -199,6 +204,8 @@ void run_game( int initial_chopsticks ) {
         << "Loser: player " << starting_player
         << " (" << players[starting_player]->name() << ")"
         << ", with " << chopsticks[starting_player] << " choptsticks.\n";
+
+    out_of_game.push_back(starting_player);
 }
 
 }} // namespace core::detail

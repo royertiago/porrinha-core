@@ -72,6 +72,14 @@ namespace core { namespace detail {
      */
     extern int last_winner;
 
+    /* List that contains the list of players that are outside of the game
+     * due to emptying their hands,
+     * in the order they got out.
+     *
+     * At the end of the game, this will have the "ranking" of each player.
+     */
+    extern std::vector<int> out_of_game;
+
 }} // namespace core::detail
 
 #endif // DETAIL_VARIABLES_H

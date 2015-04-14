@@ -56,6 +56,7 @@ namespace core { namespace detail {
      *  active_player_count
      *  starting_player
      *  last_winner
+     *  out_of_game
      *
      * Essentially, all variables except players and hand_sum.
      */
@@ -95,6 +96,7 @@ namespace core { namespace detail {
      *
      * Variables assumed valid:
      *  current_hand
+     *  out_of_game
      *
      * Updated vairables:
      *  chopsticks
@@ -103,6 +105,7 @@ namespace core { namespace detail {
      *  chopstick_count
      *  active_player_count
      *  starting_player
+     *  out_of_game
      */
     void contabilize_round_winner();
 
@@ -113,6 +116,7 @@ namespace core { namespace detail {
      *  chopsticks
      *  guess_template
      *  starting_player
+     *  out_of_game
      *
      * Updated variables:
      *  chopsticks
@@ -124,6 +128,7 @@ namespace core { namespace detail {
      *  active_player_count
      *  starting_player
      *  last_winner
+     *  out_of_game
      */
     void run_round();
 }} // namespace core::detail
