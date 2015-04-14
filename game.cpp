@@ -24,6 +24,10 @@ namespace core { namespace command_line {
 "    Chose the initial number of chopsticks.\n"
 "    Default value: 3.\n"
 "\n"
+"--games <N>\n"
+"    Chose the number of games to be run.\n"
+"    Default value: 1\n"
+"\n"
 "--disable-game-output\n"
 "    Disable the output of the game outcome every round.\n"
 "\n"
@@ -59,6 +63,7 @@ namespace core {
     namespace command_line {
 
         int chopsticks = 3;
+        int games = 1;
         std::vector< std::pair<PlayerFactory, cmdline::args> > player_list;
 
         /* Returns true if str is of the format [string]. */
@@ -83,6 +88,10 @@ namespace core {
                 }
                 if( arg == "--chopsticks" ) {
                     args >> chopsticks;
+                    continue;
+                }
+                if( arg == "--games" ) {
+                    args >> games;
                     continue;
                 }
                 if( arg == "--disable-game-output" ) {
@@ -122,6 +131,9 @@ namespace core {
         } // void parse( cmdline::args&& )
     } // namespace command_line
 
+    void run_several_games();
+    void run_single_game();
+
     int play(
         cmdline::args&& args,
         std::vector< std::pair<const char *, PlayerFactory> > player_options
@@ -140,6 +152,15 @@ namespace core {
 
         detail::set_players( std::move(player_list) );
 
+        if( games == 1 )
+            run_single_game();
+        else
+            run_several_games();
+
+        return 0;
+    }
+
+    void run_single_game() {
         auto ranking = detail::run_game( command_line::chopsticks );
 
         /* Pretty-print the ranking */
@@ -150,7 +171,35 @@ namespace core {
         for( unsigned i = 0; i < ranking.size(); i++ )
             std::cout << '[' << rev_ranking[i] << "] "
                 << player(rev_ranking[i])->name() << '\n';
-        return 0;
+    }
+
+    void run_several_games() {
+        std::vector< int > first( global_player_count() );
+        std::vector< int > second( global_player_count() );
+        std::vector< int > third( global_player_count() );
+
+        for( int game = 0; game < command_line::games; game++ ) {
+            auto ranking = detail::run_game( command_line::chopsticks );
+            first[ranking[0]]++;
+            second[ranking[1]]++;
+            if( global_player_count() >= 3 )
+                third[ranking[2]]++;
+        }
+
+        if( global_player_count() >= 3 ) {
+            std::cout << "Player - First places / second / third\n";
+            for( int p = 0; p < global_player_count(); p++ )
+                std::cout << player(p)->name() << " - "
+                    << first[p] << " / "
+                    << second[p] << " / "
+                    << third[p] << "\n";
+        }
+        else {
+            std::cout << "Player - wins\n";
+            for( int p = 0; p < global_player_count(); p++ )
+                std::cout << player(p)->name() << " - "
+                    << first[p] << "\n";
+        }
     }
 
 } // namespace core
