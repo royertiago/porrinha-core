@@ -38,6 +38,7 @@ namespace core { namespace command_line {
 #include <vector>
 #include <getopt.h>
 #include "game.h"
+#include "core/util.h"
 #include "core/detail/run.h"
 #include "core/detail/variables.h"
 
@@ -125,7 +126,16 @@ namespace core {
 
         detail::set_players( std::move(player_list) );
 
-        detail::run_game( command_line::chopsticks );
+        auto ranking = detail::run_game( command_line::chopsticks );
+
+        /* Pretty-print the ranking */
+        std::vector<int> rev_ranking( ranking.size() );
+        for( unsigned i = 0; i < ranking.size(); i++ )
+            rev_ranking[ranking[i]] = i;
+        std::cout << "\n\tRanking:\n";
+        for( unsigned i = 0; i < ranking.size(); i++ )
+            std::cout << '[' << rev_ranking[i] << "] "
+                << player(rev_ranking[i])->name() << '\n';
         return 0;
     }
 

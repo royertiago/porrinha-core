@@ -35,10 +35,12 @@ namespace core { namespace detail {
      * This is the "main" function of this file.
      * All the remaining functions are called by this one.
      *
+     * Returns the ranking of each player.
+     *
      * Variables assumed valid:
      *  players
      */
-    void run_game( int choptsicks );
+    std::vector<int> run_game( int choptsicks );
 
     /* Initialize the variables of the game.
      *

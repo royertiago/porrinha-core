@@ -182,7 +182,7 @@ void run_round() {
     }
 }
 
-void run_game( int initial_chopsticks ) {
+std::vector<int> run_game( int initial_chopsticks ) {
     init( initial_chopsticks );
 
     for( int i = 0; i < players.size(); ++i )
@@ -206,6 +206,8 @@ void run_game( int initial_chopsticks ) {
         << ", with " << chopsticks[starting_player] << " choptsticks.\n";
 
     out_of_game.push_back(starting_player);
+
+    return out_of_game;
 }
 
 }} // namespace core::detail
