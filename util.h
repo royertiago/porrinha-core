@@ -64,6 +64,13 @@ namespace core {
      */
     int index( Player * me );
 
+    /* Returns the player given the index.
+     *
+     * Note that the player is const; the game assumes
+     * you will not call Player::hand, Player::guess etc in that player.
+     */
+    const Player * player( int player_index );
+
     /* Returns the number of chopsticks that the respective player have.
      *
      * Note that this is _not_ the number of chopsticks

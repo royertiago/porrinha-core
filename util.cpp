@@ -25,6 +25,10 @@ namespace core {
         return it->second;
     }
 
+    const Player * player( int index ) {
+        return detail::players[index].get();
+    }
+
     int chopsticks( int player_index ) {
         return detail::chopsticks[player_index];
     }
