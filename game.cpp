@@ -163,14 +163,10 @@ namespace core {
     void run_single_game() {
         auto ranking = detail::run_game( command_line::chopsticks );
 
-        /* Pretty-print the ranking */
-        std::vector<int> rev_ranking( ranking.size() );
-        for( unsigned i = 0; i < ranking.size(); i++ )
-            rev_ranking[ranking[i]] = i;
         std::cout << "\n\tRanking:\n";
         for( unsigned i = 0; i < ranking.size(); i++ )
-            std::cout << '[' << rev_ranking[i] << "] "
-                << player(rev_ranking[i])->name() << '\n';
+            std::cout << '[' << ranking[i] << "] "
+                << player(ranking[i])->name() << '\n';
     }
 
     void run_several_games() {
